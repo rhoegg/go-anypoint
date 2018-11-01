@@ -45,6 +45,12 @@ func (c *Client) NewRequest(ctx context.Context, method, urlStr string, body int
 	u := c.BaseURL.ResolveReference(rel)
 
 	buf := new(bytes.Buffer)
+	if body != nil {
+		err = json.NewEncoder(buf).Encode(body)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	req, err := http.NewRequest(method, u.String(), buf)
 	if err != nil {
