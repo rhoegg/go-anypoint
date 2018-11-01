@@ -9,6 +9,7 @@ import (
 
 func TestBusinessGroupGet(t *testing.T) {
 	setup()
+	stubLogin()
 	defer teardown()
 
 	mux.HandleFunc("/accounts/api/organizations/0-1-2-3-4", func(w http.ResponseWriter, r *http.Request) {

@@ -50,3 +50,16 @@ func TestLogin(t *testing.T) {
 		t.Errorf("Login returned %+v, expected %+v", result, expected)
 	}
 }
+
+func stubLogin() {
+	mux.HandleFunc("/accounts/login", func(w http.ResponseWriter, r *http.Request) {
+		response := ` 
+		{
+			"access_token": "a-b-c-d-e",
+			"token_type": "bearer",
+			"redirectUrl": "/home/"
+		}`
+
+		fmt.Fprint(w, response)
+	})
+}

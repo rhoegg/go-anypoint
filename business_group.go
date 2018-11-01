@@ -29,7 +29,7 @@ func (s *BusinessGroupServiceOp) Get(ctx context.Context, id string) (*BusinessG
 	}
 
 	bg := new(BusinessGroup)
-	resp, err := s.client.Do(ctx, req, bg)
+	resp, err := s.client.DoAuthenticated(ctx, req, bg)
 	if err != nil {
 		return nil, resp, err
 	}

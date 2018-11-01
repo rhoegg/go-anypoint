@@ -4,7 +4,10 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 )
@@ -16,8 +19,11 @@ const (
 
 type Client struct {
 	client *http.Client
+	accessToken string
 
 	BaseURL *url.URL
+	Username string
+	Password string
 
 	BusinessGroup BusinessGroupService
 }
@@ -66,7 +72,17 @@ func (c *Client) NewRequest(ctx context.Context, method, urlStr string, body int
 	return req, nil
 }
 
+func (c *Client) DoAuthenticated(ctx context.Context, req *http.Request, v interface{}) (*Response, error) {
+	token, err := c.getAccessToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Add("Authorizationx", fmt.Sprintf("Bearer %v", token))
+	return c.Do(ctx, req, v)
+}
+
 func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Response, error) {
+
 	resp, err := DoRequestWithClient(ctx, c.client, req)
 	if err != nil {
 		return nil, err
@@ -79,6 +95,11 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Res
 	}()
 
 	response := &Response{Response: resp}
+
+	err = CheckResponse(resp)
+	if (err != nil) {
+		return response, err
+	}
 
 	if v != nil {
 		if w, ok := v.(io.Writer); ok {
@@ -95,6 +116,27 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Res
 	}
 
 	return response, err
+}
+
+func CheckResponse(r *http.Response) error {
+	if c := r.StatusCode; c >= 200 && c <= 299 {
+		return nil
+	}
+
+	data, _ := ioutil.ReadAll(r.Body)
+
+	return errors.New(fmt.Sprintf("(%v) %v", r.StatusCode, string(data)))
+}
+
+func (c *Client) getAccessToken(ctx context.Context) (string, error) {
+	if c.accessToken == "" {
+		result, _, err := c.Login(ctx, &LoginRequest{Username: c.Username, Password: c.Password})
+		if err != nil {
+			return "", err
+		}
+		c.accessToken = result.AccessToken
+	}
+	return c.accessToken, nil
 }
 
 func DoRequestWithClient(ctx context.Context, client *http.Client, req *http.Request) (*http.Response, error) {
