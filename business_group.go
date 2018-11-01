@@ -17,7 +17,7 @@ type BusinessGroupServiceOp struct {
 }
 
 type BusinessGroup struct {
-	Name 	string
+	Name string
 }
 
 func (s *BusinessGroupServiceOp) Get(ctx context.Context, id string) (*BusinessGroup, *Response, error) {
@@ -30,7 +30,7 @@ func (s *BusinessGroupServiceOp) Get(ctx context.Context, id string) (*BusinessG
 
 	bg := new(BusinessGroup)
 	resp, err := s.client.Do(ctx, req, bg)
-	if (err != nil) {
+	if err != nil {
 		return nil, resp, err
 	}
 	return bg, resp, err

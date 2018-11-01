@@ -15,7 +15,7 @@ type Client struct {
 
 	BaseURL *url.URL
 
-	BusinessGroup 	BusinessGroupService
+	BusinessGroup BusinessGroupService
 }
 
 type Response struct {
