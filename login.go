@@ -9,8 +9,8 @@ import (
 const loginBasePath = "/accounts/login"
 
 type LoginRequest struct {
-	Username string
-	Password string
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 type LoginResult struct {

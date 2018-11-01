@@ -4,11 +4,15 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/url"
 )
 
-const defaultBaseURL = "https://anypoint.mulesoft.com"
+const (
+	defaultBaseURL = "https://anypoint.mulesoft.com"
+	mediaType = "application/json"
+)
 
 type Client struct {
 	client *http.Client
@@ -57,6 +61,8 @@ func (c *Client) NewRequest(ctx context.Context, method, urlStr string, body int
 		return nil, err
 	}
 
+	req.Header.Add("Content-Type", mediaType)
+
 	return req, nil
 }
 
@@ -75,9 +81,16 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Res
 	response := &Response{Response: resp}
 
 	if v != nil {
-		err = json.NewDecoder(resp.Body).Decode(v)
-		if err != nil {
-			return nil, err
+		if w, ok := v.(io.Writer); ok {
+			_, err = io.Copy(w, resp.Body)
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			err = json.NewDecoder(resp.Body).Decode(v)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
