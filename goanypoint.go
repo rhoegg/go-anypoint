@@ -14,14 +14,14 @@ import (
 
 const (
 	defaultBaseURL = "https://anypoint.mulesoft.com"
-	mediaType = "application/json"
+	mediaType      = "application/json"
 )
 
 type Client struct {
-	client *http.Client
+	client      *http.Client
 	accessToken string
 
-	BaseURL *url.URL
+	BaseURL  *url.URL
 	Username string
 	Password string
 
@@ -77,7 +77,7 @@ func (c *Client) DoAuthenticated(ctx context.Context, req *http.Request, v inter
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Add("Authorizationx", fmt.Sprintf("Bearer %v", token))
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %v", token))
 	return c.Do(ctx, req, v)
 }
 
@@ -97,7 +97,7 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Res
 	response := &Response{Response: resp}
 
 	err = CheckResponse(resp)
-	if (err != nil) {
+	if err != nil {
 		return response, err
 	}
 
