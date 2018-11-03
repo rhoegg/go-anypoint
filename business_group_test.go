@@ -100,7 +100,29 @@ func TestBusinessGroupCreateWithName(t *testing.T) {
 	if created.Name != "Alpha Group" {
 		t.Errorf("Created BusinessGroup has name %v, expected %v", created.Name, "Alpha Group")
 	}
+}
 
+func TestBusinessGroupDelete(t *testing.T) {
+	setup()
+	stubLogin()
+	defer teardown()
+
+	deleted := false
+
+	handleHttp(t, "/accounts/api/organizations/0-1-2-3-4", http.MethodDelete, func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "{}")
+		deleted = true
+	})
+
+	_, err := client.BusinessGroup.Delete(ctx, "0-1-2-3-4")
+
+	if err != nil {
+		t.Errorf("BusinessGroup.Delete returned error: %+v", err)
+	}
+
+	if !deleted {
+		t.Errorf("BusinessGroup.Delete did not invoke the API correctly.")
+	}
 }
 
 func BusinessGroupTestResponse(name string) (string) {

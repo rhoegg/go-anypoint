@@ -12,6 +12,7 @@ type BusinessGroupService interface {
 	Get(context.Context, string) (*BusinessGroup, *Response, error)
 	Create(context.Context, *BusinessGroupCreateRequest) (*BusinessGroup, *Response, error)
 	CreateWithName(context.Context, string) (*BusinessGroup, error)
+	Delete(context.Context, string) (*Response, error)
 }
 
 type BusinessGroupServiceOp struct {
@@ -65,4 +66,14 @@ func (s *BusinessGroupServiceOp) CreateWithName(ctx context.Context, name string
 	req := &BusinessGroupCreateRequest{Name: name}
 	resp, _, err := s.Create(ctx, req)
 	return resp, err
+}
+
+func (s *BusinessGroupServiceOp) Delete(ctx context.Context, id string) (*Response, error) {
+	path := fmt.Sprintf("%s/%s", bgBasePath, id)
+	req, err := s.client.NewRequest(ctx, http.MethodDelete, path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.Do(ctx, req, nil)
 }
