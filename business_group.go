@@ -11,6 +11,7 @@ const bgBasePath = "accounts/api/organizations"
 type BusinessGroupService interface {
 	Get(context.Context, string) (*BusinessGroup, *Response, error)
 	Create(context.Context, *BusinessGroupCreateRequest) (*BusinessGroup, *Response, error)
+	CreateWithName(context.Context, string) (*BusinessGroup, error)
 }
 
 type BusinessGroupServiceOp struct {
@@ -58,4 +59,10 @@ func (s *BusinessGroupServiceOp) Create(ctx context.Context, createRequest *Busi
 	}
 
 	return bg, resp, err
+}
+
+func (s *BusinessGroupServiceOp) CreateWithName(ctx context.Context, name string) (*BusinessGroup, error) {
+	req := &BusinessGroupCreateRequest{Name: name}
+	resp, _, err := s.Create(ctx, req)
+	return resp, err
 }
