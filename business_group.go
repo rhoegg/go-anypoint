@@ -20,6 +20,7 @@ type BusinessGroupServiceOp struct {
 }
 
 type BusinessGroup struct {
+	ID   string
 	Name string
 }
 

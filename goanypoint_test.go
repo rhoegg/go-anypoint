@@ -39,9 +39,9 @@ func testMethod(t *testing.T, r *http.Request, expected string) {
 }
 
 func handleHttp(t *testing.T, path string, method string, handler func(w http.ResponseWriter, r *http.Request)) {
-		mux.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
-			testMethod(t, r, method)
-			handler(w, r)
-		})
+	mux.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
+		testMethod(t, r, method)
+		handler(w, r)
+	})
 
 }

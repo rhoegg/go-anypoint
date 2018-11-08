@@ -31,7 +31,7 @@ func TestBusinessGroupGet(t *testing.T) {
 		t.Errorf("BusinessGroup.Get returned error: %v", err)
 	}
 
-	expected := &BusinessGroup{Name: "Alpha Group"}
+	expected := &BusinessGroup{Name: "Alpha Group", ID: "0-1-2-3-4"}
 	if !reflect.DeepEqual(bg, expected) {
 		t.Errorf("BusinessGroup.Get returned %+v, expected %+v", bg, expected)
 	}
@@ -55,7 +55,7 @@ func TestBusinessGroupCreate(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		response := BusinessGroupTestResponse("Alpha Group")
+		response := businessGroupTestResponse("Alpha Group")
 
 		if !reflect.DeepEqual(v, createRequest) {
 			t.Errorf("Request body = %+v, expected %+v", v, createRequest)
@@ -69,7 +69,7 @@ func TestBusinessGroupCreate(t *testing.T) {
 		t.Errorf("BusinessGroup.Create returned error: %v", err)
 	}
 
-	expected := &BusinessGroup{Name: "Alpha Group"}
+	expected := &BusinessGroup{Name: "Alpha Group", ID: "0-1-2-3-4"}
 	if !reflect.DeepEqual(bg, expected) {
 		t.Errorf("BusinessGroup.Create returned %+v, expected %+v", bg, expected)
 	}
@@ -87,7 +87,7 @@ func TestBusinessGroupCreateWithName(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		response := BusinessGroupTestResponse("Alpha Group")
+		response := businessGroupTestResponse("Alpha Group")
 
 		fmt.Fprint(w, response)
 	})
@@ -125,7 +125,7 @@ func TestBusinessGroupDelete(t *testing.T) {
 	}
 }
 
-func BusinessGroupTestResponse(name string) (string) {
+func businessGroupTestResponse(name string) string {
 	return fmt.Sprintf(`{
 			"name": "%v",
 			"id": "0-1-2-3-4",
