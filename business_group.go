@@ -20,8 +20,9 @@ type BusinessGroupServiceOp struct {
 }
 
 type BusinessGroup struct {
-	ID   string
-	Name string
+	ID       string
+	Name     string
+	ClientID string
 }
 
 type BusinessGroupCreateRequest struct {

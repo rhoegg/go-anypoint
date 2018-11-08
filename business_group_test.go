@@ -69,7 +69,7 @@ func TestBusinessGroupCreate(t *testing.T) {
 		t.Errorf("BusinessGroup.Create returned error: %v", err)
 	}
 
-	expected := &BusinessGroup{Name: "Alpha Group", ID: "0-1-2-3-4"}
+	expected := &BusinessGroup{Name: "Alpha Group", ID: "0-1-2-3-4", ClientID: "00112233445566778899aabbccddeeff"}
 	if !reflect.DeepEqual(bg, expected) {
 		t.Errorf("BusinessGroup.Create returned %+v, expected %+v", bg, expected)
 	}
