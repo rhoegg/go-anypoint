@@ -102,6 +102,16 @@ func TestBusinessGroupCreateWithName(t *testing.T) {
 	}
 }
 
+func TestBusinessGroupCreate_UsesOwnerIDFromClient(t *testing.T) {
+	setup()
+	stubLogin()
+	defer teardown()
+
+	handleHttp(t, "/accounts/api/organizations", http.MethodPost, func(w http.ResponseWriter, r *http.Request) {
+
+	})
+}
+
 func TestBusinessGroupDelete(t *testing.T) {
 	setup()
 	stubLogin()

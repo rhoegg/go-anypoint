@@ -26,6 +26,7 @@ type Client struct {
 	Password string
 
 	BusinessGroup BusinessGroupService
+	Profile ProfileService
 }
 
 type Response struct {
@@ -42,6 +43,7 @@ func NewClient(httpClient *http.Client) *Client {
 	c := &Client{client: httpClient, BaseURL: baseURL}
 
 	c.BusinessGroup = &BusinessGroupServiceOp{client: c}
+	c.Profile = &ProfileServiceOp{client: c}
 
 	return c
 }
