@@ -45,7 +45,7 @@ func TestBusinessGroupCreate(t *testing.T) {
 	createRequest := &anypointplatform.BusinessGroupCreateRequest{
 		Name:                 "Alpha Group",
 		OwnerID:              "7-6-5-4-3",
-		ParentOrganizationID: "0-1-2-3-4",
+		ParentID: "0-1-2-3-4",
 	}
 
 	handleHttp(t, "/accounts/api/organizations", http.MethodPost, func(w http.ResponseWriter, r *http.Request) {
@@ -120,7 +120,36 @@ func TestBusinessGroupCreate_UsesDefaultOwnerIDFromProfile(t *testing.T) {
 
 	createRequest := &anypointplatform.BusinessGroupCreateRequest{
 		Name:                 "Alpha Group",
-		ParentOrganizationID: "0-1-2-3-4",
+		ParentID: "0-1-2-3-4",
+	}
+	_, _, err := client.BusinessGroup.Create(ctx, createRequest)
+	if err != nil {
+		t.Errorf("BusinessGroup.Create returned error: %v", err)
+	}
+}
+
+func TestBusinessGroupCreate_UsesDefaultParentIDFromOrganizationInProfile(t *testing.T) {
+	setupBusinessGroupTest(t)
+	defer teardown()
+
+	handleHttp(t, "/accounts/api/organizations", http.MethodPost, func(w http.ResponseWriter, r *http.Request) {
+		v := new(anypointplatform.BusinessGroupCreateRequest)
+		err := json.NewDecoder(r.Body).Decode(v)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if v.ParentID != "6-6-6-6-6" {
+			t.Errorf("Created BusinessGroup has ParentID %s, expected %s", v.ParentID, "6-6-6-6-6")
+		}
+		fmt.Fprint(w, businessGroupTestResponse("Alpha Group"))
+	})
+
+	When(client.Profile.Get(ctx)).ThenReturn(&anypointplatform.Profile{ID:"MOCK_PROFILE_ID", OrganizationID: "6-6-6-6-6"}, nil, nil)
+
+	createRequest := &anypointplatform.BusinessGroupCreateRequest{
+		Name:                 "Alpha Group",
+		OwnerID: "0-1-2-3-4",
 	}
 	_, _, err := client.BusinessGroup.Create(ctx, createRequest)
 	if err != nil {

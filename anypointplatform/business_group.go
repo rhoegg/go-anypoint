@@ -28,7 +28,7 @@ type BusinessGroup struct {
 type BusinessGroupCreateRequest struct {
 	Name                 string
 	OwnerID              string
-	ParentOrganizationID string
+	ParentID string `json:parentOrganizationId`
 }
 
 func (s *BusinessGroupServiceOp) Get(ctx context.Context, id string) (*BusinessGroup, *Response, error) {
@@ -56,6 +56,14 @@ func (s *BusinessGroupServiceOp) Create(ctx context.Context, createRequest *Busi
 			return nil, nil, err
 		}
 		createRequest.OwnerID = p.ID
+	}
+
+	if createRequest.ParentID == "" {
+		p, _, err := s.client.Profile.Get(ctx)
+		if err != nil {
+			return nil, nil, err
+		}
+		createRequest.ParentID = p.OrganizationID
 	}
 
 	req, err := s.client.NewRequest(ctx, http.MethodPost, path, createRequest)
