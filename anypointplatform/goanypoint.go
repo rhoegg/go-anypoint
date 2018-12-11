@@ -26,7 +26,7 @@ type Client struct {
 	Password string
 
 	BusinessGroup BusinessGroupService
-	Profile ProfileService
+	Profile       ProfileService
 }
 
 type Response struct {

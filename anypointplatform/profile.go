@@ -7,9 +7,9 @@ import (
 
 const profileBasePath = "accounts/api/profile"
 
+//go:generate pegomock generate --use-experimental-model-gen -o mock_profile_test.go --package anypointplatform_test github.com/rhoegg/go-anypoint/anypointplatform ProfileService
 type ProfileService interface {
 	Get(context.Context) (*Profile, *Response, error)
-	GetID(context.Context) (string, error)
 }
 
 type ProfileServiceOp struct {
@@ -17,7 +17,7 @@ type ProfileServiceOp struct {
 }
 
 type Profile struct {
-	ID string
+	ID             string
 	OrganizationID string
 }
 
@@ -35,13 +35,4 @@ func (s *ProfileServiceOp) Get(ctx context.Context) (*Profile, *Response, error)
 		return nil, resp, err
 	}
 	return profile, resp, err
-}
-
-func (s *ProfileServiceOp) GetID(ctx context.Context) (string, error) {
-	profile, _, err := s.Get(ctx)
-	if err != nil {
-		return "", err
-	}
-
-	return profile.ID, err
 }

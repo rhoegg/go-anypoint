@@ -1,8 +1,9 @@
-package anypointplatform
+package anypointplatform_test
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/rhoegg/go-anypoint/anypointplatform"
 	"net/http"
 	"reflect"
 	"testing"
@@ -12,13 +13,13 @@ func TestLogin(t *testing.T) {
 	setup()
 	defer teardown()
 
-	loginRequest := &LoginRequest{
+	loginRequest := &anypointplatform.LoginRequest{
 		Username: "max",
 		Password: "mule",
 	}
 
 	mux.HandleFunc("/accounts/login", func(w http.ResponseWriter, r *http.Request) {
-		v := new(LoginRequest)
+		v := new(anypointplatform.LoginRequest)
 		err := json.NewDecoder(r.Body).Decode(v)
 		if err != nil {
 			t.Fatal(err)
@@ -45,7 +46,7 @@ func TestLogin(t *testing.T) {
 		t.Errorf("Login returned error: %v", err)
 	}
 
-	expected := &LoginResult{AccessToken: "a-b-c-d-e", TokenType: "bearer", RedirectURL: "/home/"}
+	expected := &anypointplatform.LoginResult{AccessToken: "a-b-c-d-e", TokenType: "bearer", RedirectURL: "/home/"}
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Login returned %+v, expected %+v", result, expected)
 	}

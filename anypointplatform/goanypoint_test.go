@@ -1,7 +1,8 @@
-package anypointplatform
+package anypointplatform_test
 
 import (
 	"context"
+	"github.com/rhoegg/go-anypoint/anypointplatform"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -13,7 +14,7 @@ var (
 
 	ctx = context.TODO()
 
-	client *Client
+	client *anypointplatform.Client
 
 	server *httptest.Server
 )
@@ -22,7 +23,7 @@ func setup() {
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)
 
-	client = NewClient(nil)
+	client = anypointplatform.NewClient(nil)
 	url, _ := url.Parse(server.URL)
 	client.BaseURL = url
 
