@@ -64,7 +64,7 @@ func (s *BusinessGroupServiceOp) Create(ctx context.Context, createRequest *Busi
 	}
 
 	bg := new(BusinessGroup)
-	resp, err := s.client.Do(ctx, req, bg)
+	resp, err := s.client.DoAuthenticated(ctx, req, bg)
 	if err != nil {
 		return nil, resp, err
 	}
