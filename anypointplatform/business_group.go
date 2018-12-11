@@ -26,9 +26,9 @@ type BusinessGroup struct {
 }
 
 type BusinessGroupCreateRequest struct {
-	Name     string
-	OwnerID  string
-	ParentID string `json:parentOrganizationId`
+	Name     string `json:"name"`
+	OwnerID  string `json:"ownerId"`
+	ParentID string `json:"parentOrganizationId"`
 }
 
 func (s *BusinessGroupServiceOp) Get(ctx context.Context, id string) (*BusinessGroup, *Response, error) {
