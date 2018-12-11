@@ -98,5 +98,5 @@ func (s *BusinessGroupServiceOp) Delete(ctx context.Context, id string) (*Respon
 		return nil, err
 	}
 
-	return s.client.Do(ctx, req, nil)
+	return s.client.DoAuthenticated(ctx, req, nil)
 }
