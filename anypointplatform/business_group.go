@@ -50,20 +50,12 @@ func (s *BusinessGroupServiceOp) Get(ctx context.Context, id string) (*BusinessG
 func (s *BusinessGroupServiceOp) Create(ctx context.Context, createRequest *BusinessGroupCreateRequest) (*BusinessGroup, *Response, error) {
 	path := bgBasePath
 
-	if createRequest.OwnerID == "" {
+	if requestNeedsProfileInfo(createRequest) {
 		p, _, err := s.client.Profile.Get(ctx)
 		if err != nil {
 			return nil, nil, err
 		}
-		createRequest.OwnerID = p.ID
-	}
-
-	if createRequest.ParentID == "" {
-		p, _, err := s.client.Profile.Get(ctx)
-		if err != nil {
-			return nil, nil, err
-		}
-		createRequest.ParentID = p.OrganizationID
+		createRequest.applyProfileDefaults(p)
 	}
 
 	req, err := s.client.NewRequest(ctx, http.MethodPost, path, createRequest)
@@ -78,6 +70,19 @@ func (s *BusinessGroupServiceOp) Create(ctx context.Context, createRequest *Busi
 	}
 
 	return bg, resp, err
+}
+
+func (r *BusinessGroupCreateRequest) applyProfileDefaults(p *Profile) {
+	if r.OwnerID == "" {
+		r.OwnerID = p.ID
+	}
+	if r.ParentID == "" {
+		r.ParentID = p.OrganizationID
+	}
+}
+
+func requestNeedsProfileInfo(createRequest *BusinessGroupCreateRequest) bool {
+	return createRequest.OwnerID == "" || createRequest.ParentID == ""
 }
 
 func (s *BusinessGroupServiceOp) CreateWithName(ctx context.Context, name string) (*BusinessGroup, error) {

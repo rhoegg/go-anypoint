@@ -103,6 +103,7 @@ func TestBusinessGroupCreate_UsesDefaultOwnerIDFromProfile(t *testing.T) {
 	setupBusinessGroupTest(t)
 	defer teardown()
 
+	const expectedOwnerId = "5-5-5-5-5"
 	handleHttp(t, "/accounts/api/organizations", http.MethodPost, func(w http.ResponseWriter, r *http.Request) {
 		v := new(anypointplatform.BusinessGroupCreateRequest)
 		err := json.NewDecoder(r.Body).Decode(v)
@@ -110,13 +111,13 @@ func TestBusinessGroupCreate_UsesDefaultOwnerIDFromProfile(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if v.OwnerID != "5-5-5-5-5" {
-			t.Errorf("Created BusinessGroup has OwnerID %s, expected %s", v.OwnerID, "5-5-5-5-5")
+		if v.OwnerID != expectedOwnerId {
+			t.Errorf("Created BusinessGroup has OwnerID %s, expected %s", v.OwnerID, expectedOwnerId)
 		}
 		fmt.Fprint(w, businessGroupTestResponse("Alpha Group"))
 	})
 
-	When(client.Profile.Get(ctx)).ThenReturn(&anypointplatform.Profile{ID: "5-5-5-5-5"}, nil, nil)
+	When(client.Profile.Get(ctx)).ThenReturn(&anypointplatform.Profile{ID: expectedOwnerId}, nil, nil)
 
 	createRequest := &anypointplatform.BusinessGroupCreateRequest{
 		Name:     "Alpha Group",
@@ -132,6 +133,7 @@ func TestBusinessGroupCreate_UsesDefaultParentIDFromOrganizationInProfile(t *tes
 	setupBusinessGroupTest(t)
 	defer teardown()
 
+	const expectedParentOrganizationId = "6-6-6-6-6"
 	handleHttp(t, "/accounts/api/organizations", http.MethodPost, func(w http.ResponseWriter, r *http.Request) {
 		v := new(anypointplatform.BusinessGroupCreateRequest)
 		err := json.NewDecoder(r.Body).Decode(v)
@@ -139,13 +141,13 @@ func TestBusinessGroupCreate_UsesDefaultParentIDFromOrganizationInProfile(t *tes
 			t.Fatal(err)
 		}
 
-		if v.ParentID != "6-6-6-6-6" {
-			t.Errorf("Created BusinessGroup has ParentID %s, expected %s", v.ParentID, "6-6-6-6-6")
+		if v.ParentID != expectedParentOrganizationId {
+			t.Errorf("Created BusinessGroup has ParentID %s, expected %s", v.ParentID, expectedParentOrganizationId)
 		}
 		fmt.Fprint(w, businessGroupTestResponse("Alpha Group"))
 	})
 
-	When(client.Profile.Get(ctx)).ThenReturn(&anypointplatform.Profile{ID: "MOCK_PROFILE_ID", OrganizationID: "6-6-6-6-6"}, nil, nil)
+	When(client.Profile.Get(ctx)).ThenReturn(&anypointplatform.Profile{ID: "MOCK_PROFILE_ID", OrganizationID: expectedParentOrganizationId}, nil, nil)
 
 	createRequest := &anypointplatform.BusinessGroupCreateRequest{
 		Name:    "Alpha Group",
