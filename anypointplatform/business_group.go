@@ -26,8 +26,8 @@ type BusinessGroup struct {
 }
 
 type BusinessGroupCreateRequest struct {
-	Name                 string
-	OwnerID              string
+	Name     string
+	OwnerID  string
 	ParentID string `json:parentOrganizationId`
 }
 

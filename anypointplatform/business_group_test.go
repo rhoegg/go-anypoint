@@ -43,8 +43,8 @@ func TestBusinessGroupCreate(t *testing.T) {
 	defer teardown()
 
 	createRequest := &anypointplatform.BusinessGroupCreateRequest{
-		Name:                 "Alpha Group",
-		OwnerID:              "7-6-5-4-3",
+		Name:     "Alpha Group",
+		OwnerID:  "7-6-5-4-3",
 		ParentID: "0-1-2-3-4",
 	}
 
@@ -116,10 +116,10 @@ func TestBusinessGroupCreate_UsesDefaultOwnerIDFromProfile(t *testing.T) {
 		fmt.Fprint(w, businessGroupTestResponse("Alpha Group"))
 	})
 
-	When(client.Profile.Get(ctx)).ThenReturn(&anypointplatform.Profile{ID:"5-5-5-5-5"}, nil, nil)
+	When(client.Profile.Get(ctx)).ThenReturn(&anypointplatform.Profile{ID: "5-5-5-5-5"}, nil, nil)
 
 	createRequest := &anypointplatform.BusinessGroupCreateRequest{
-		Name:                 "Alpha Group",
+		Name:     "Alpha Group",
 		ParentID: "0-1-2-3-4",
 	}
 	_, _, err := client.BusinessGroup.Create(ctx, createRequest)
@@ -145,10 +145,10 @@ func TestBusinessGroupCreate_UsesDefaultParentIDFromOrganizationInProfile(t *tes
 		fmt.Fprint(w, businessGroupTestResponse("Alpha Group"))
 	})
 
-	When(client.Profile.Get(ctx)).ThenReturn(&anypointplatform.Profile{ID:"MOCK_PROFILE_ID", OrganizationID: "6-6-6-6-6"}, nil, nil)
+	When(client.Profile.Get(ctx)).ThenReturn(&anypointplatform.Profile{ID: "MOCK_PROFILE_ID", OrganizationID: "6-6-6-6-6"}, nil, nil)
 
 	createRequest := &anypointplatform.BusinessGroupCreateRequest{
-		Name:                 "Alpha Group",
+		Name:    "Alpha Group",
 		OwnerID: "0-1-2-3-4",
 	}
 	_, _, err := client.BusinessGroup.Create(ctx, createRequest)
@@ -188,7 +188,7 @@ func setupBusinessGroupTest(t *testing.T) {
 
 func stubGetProfile() {
 	client.Profile = NewMockProfileService()
-	When(client.Profile.Get(ctx)).ThenReturn(&anypointplatform.Profile{ID:"MOCK-PROFILE-ID"}, nil, nil)
+	When(client.Profile.Get(ctx)).ThenReturn(&anypointplatform.Profile{ID: "MOCK-PROFILE-ID"}, nil, nil)
 }
 
 func businessGroupTestResponse(name string) string {
