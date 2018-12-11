@@ -1,4 +1,4 @@
-package go_anypoint
+package anypointplatform
 
 import (
 	"fmt"
