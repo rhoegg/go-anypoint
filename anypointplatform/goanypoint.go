@@ -25,6 +25,7 @@ type Client struct {
 	Username string
 	Password string
 
+	MasterOrganization MasterOrganizationService
 	BusinessGroup BusinessGroupService
 	Profile       ProfileService
 }
@@ -42,6 +43,7 @@ func NewClient(httpClient *http.Client) *Client {
 
 	c := &Client{client: httpClient, BaseURL: baseURL}
 
+	c.MasterOrganization = &MasterOrganizationServiceOp{client: c}
 	c.BusinessGroup = &BusinessGroupServiceOp{client: c}
 	c.Profile = &ProfileServiceOp{client: c}
 

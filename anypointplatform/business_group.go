@@ -7,6 +7,7 @@ import (
 )
 
 const bgBasePath = "accounts/api/organizations"
+// Business groups use the same resource as the master organization
 
 type BusinessGroupService interface {
 	Get(context.Context, string) (*BusinessGroup, *Response, error)
